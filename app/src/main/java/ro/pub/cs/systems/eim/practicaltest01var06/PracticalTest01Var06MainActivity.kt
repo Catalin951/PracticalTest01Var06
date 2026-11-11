@@ -12,6 +12,7 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 
 class PracticalTest01Var06MainActivity : AppCompatActivity() {
+    var total = 0
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -73,5 +74,34 @@ class PracticalTest01Var06MainActivity : AppCompatActivity() {
             insets
         }
     }
+
+    // other function
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+        if (requestCode == 1) {
+            if (resultCode == RESULT_OK && data != null) {
+                val score = data.getStringExtra("SCORE_EXTRA")
+                if (score != null)
+                    total += score.toInt()
+                Toast.makeText(this, total.toString(), Toast.LENGTH_SHORT).show() // when ok
+            }
+        }
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+
+        outState.putString("SCORE", total.toString())
+    }
+
+    override fun onRestoreInstanceState(savedInstanceState: Bundle) {
+        if (savedInstanceState.containsKey("SCORE") && savedInstanceState.getString("SCORE") != null) {
+            val totalString = savedInstanceState.getString("SCORE")
+            if (totalString != null)
+                total = totalString.toInt()
+        }
+    }
+
 
 }

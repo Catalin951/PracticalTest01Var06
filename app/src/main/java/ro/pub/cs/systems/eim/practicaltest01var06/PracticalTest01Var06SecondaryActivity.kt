@@ -1,5 +1,6 @@
 package ro.pub.cs.systems.eim.practicaltest01var06
 
+import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
 import android.widget.TextView
@@ -25,23 +26,32 @@ class PracticalTest01Var06SecondaryActivity : AppCompatActivity() {
         val joker = "*"
         val checkboxNumberString = intent.getStringExtra("CHECKBOXES_NUMBER_EXTRA")
         var checkboxNumber = 0
+        var isGained = false
         if (checkboxNumberString != null)
             checkboxNumber = checkboxNumberString.toInt()
+
         if (leftNumber == joker &&
             (middleNumber == rightNumber || middleNumber == joker || rightNumber == joker)) {
                 secondActivityText.text = "Gained"
+            isGained = true
         }
 
         if (middleNumber == joker &&
-            (leftNumber == rightNumber || leftNumber == joker || rightNumber == joker))
+            (leftNumber == rightNumber || leftNumber == joker || rightNumber == joker)) {
             secondActivityText.text = "Gained"
+            isGained = true
+        }
 
         if (rightNumber == joker &&
-            (leftNumber == middleNumber || leftNumber == joker || middleNumber == joker))
+            (leftNumber == middleNumber || leftNumber == joker || middleNumber == joker)) {
             secondActivityText.text = "Gained"
+            isGained = true
+        }
 
-        if (leftNumber == middleNumber && middleNumber == rightNumber)
+        if (leftNumber == middleNumber && middleNumber == rightNumber) {
             secondActivityText.text = "Gained"
+            isGained = true
+        }
 
         var pointsGained = 100
         if (checkboxNumber == 2)
@@ -49,6 +59,7 @@ class PracticalTest01Var06SecondaryActivity : AppCompatActivity() {
         else if (checkboxNumber == 1)
             pointsGained = 50
 //         else pointsgained = 0
+
         secondActivityText.text = (secondActivityText.text.toString()) + " " + pointsGained.toString()
 //        secondActivityText.text = pointsGained.toString()
 //        secondActivityText.text = checkboxNumber.toString()
@@ -56,7 +67,16 @@ class PracticalTest01Var06SecondaryActivity : AppCompatActivity() {
         // b == joker -> a == c SAU ORICARE E JOKER
         // c == joker -> a == b SAU ORICARE E JOKER
         // a == b  && b == c
+        buttonOk.setOnClickListener {
+            val intent = Intent(this, PracticalTest01Var06MainActivity::class.java)
+            if (isGained)
+                intent.putExtra("SCORE_EXTRA", pointsGained.toString()) // put something for them
+            else
+                intent.putExtra("SCORE_EXTRA", "0") // put something for them
 
+            setResult(RESULT_OK, intent)
+            finish()
+        }
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
